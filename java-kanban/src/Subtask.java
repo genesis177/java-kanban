@@ -1,12 +1,12 @@
 public class Subtask extends Task {
-    private int epicId;
+    private  int parentEpicId;
 
-    public Subtask(String title, String description, int epicId) {
+    public Subtask(String title, String description, int parentEpicId) {
         super(title, description);
-        this.epicId = epicId;
+        this.parentEpicId = parentEpicId;
     }
 
-    public int getEpicId() {
-        return epicId;
+    public int getParentEpicId() {
+        return parentEpicId;
     }
 }

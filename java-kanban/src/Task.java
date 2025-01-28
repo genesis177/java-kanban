@@ -1,21 +1,13 @@
-import java.util.Objects;
-
 public class Task {
-    private static int idCounter = 0;
-    private int id;
     private String title;
     private String description;
+    private int id;
     private Status status;
 
     public Task(String title, String description) {
-        this.id = ++idCounter;
         this.title = title;
         this.description = description;
         this.status = Status.NEW;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getTitle() {
@@ -26,8 +18,16 @@ public class Task {
         return description;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public Status getStatus() {
         return status;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setStatus(Status status) {
@@ -44,6 +44,6 @@ public class Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Integer.hashCode(id);
     }
 }

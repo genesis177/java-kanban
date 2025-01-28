@@ -1,63 +1,119 @@
-import java.util.*;
+import java.util.List;
 
-public class TaskManager {
-    private Map<Integer, Task> tasks = new HashMap<>();
-    private Map<Integer, Epic> epics = new HashMap<>();
-    private Map<Integer, Subtask> subtasks = new HashMap<>();
-    private int idCounter = 0;
+public interface TaskManager {
 
-    public void createTask(Task task) {
-        tasks.put(task.getId(), task);
-    }
+    /**
+     * Создает новую задачу.
+     *
+     * @param  task задача, которую необходимо создать
+     */
+    void createTask(Task task);
 
-    public void createSubtask(Subtask subtask) {
-        subtasks.put(subtask.getId(), subtask);
-        Epic epic = epics.get(subtask.getEpicId());
-        if (epic != null) {
-            epic.addSubtaskId(subtask.getId());
-        }
-    }
+    /**
+     * Создает новую подзадачу.
+     *
+     * @param subtask подзадача, которую необходимо создать
+     */
+    void createSubtask(Subtask subtask);
 
-    public void createEpic(Epic epic) {
-        epics.put(epic.getId(), epic);
-    }
+    /**
+     * Создает новый эпик.
+     *
+     * @param epic эпик, который необходимо создать
+     */
+    void createEpic(Epic epic);
 
-    public Task getTaskById(int id) {
-        return tasks.get(id);
-    }
+    /**
+     * Получает задачу по ее идентификатору.
+     *
+     * @param id идентификатор задачи
+     * @return задача с указанным идентификатором
+     */
+    Task getTask(int id);
 
-    public List<Task> getAllTasks() {
-        return new ArrayList<>(tasks.values());
-    }
+    /**
+     * Получает подзадачу по ее идентификатору.
+     *
+     * @param id идентификатор подзадачи
+     * @return подзадача с указанным идентификатором
+     */
+    Subtask getSubtask(int id);
 
-    public List<Epic> getAllEpics() {
-        return new ArrayList<>(epics.values());
-    }
+    /**
+     * Получает эпик по его идентификатору.
+     *
+     * @param id идентификатор эпика
+     * @return эпик с указанным идентификатором
+     */
+    Epic getEpic(int id);
 
-    public List<Subtask> getAllSubtasks() {
-        return new ArrayList<>(subtasks.values());
-    }
+    /**
+     * Удаляет задачу по ее идентификатору.
+     *
+     * @param id идентификатор задачи, которую необходимо удалить
+     */
+    void deleteTask(int id);
 
-    public void updateEpicStatus(int epicId) {
-        Epic epic = epics.get(epicId);
-        if (epic != null) {
-            List<Integer> subtaskIds = epic.getSubtaskIds();
-            if (subtaskIds.isEmpty()) {
-                epic.setStatus(Status.NEW);
-            } else {
-                boolean allDone = true;
-                for (int id : subtaskIds) {
-                    if (subtasks.get(id).getStatus() != Status.DONE) {
-                        allDone = false;
-                        break;
-                    }
-                }
-                epic.setStatus(allDone ? Status.DONE : Status.IN_PROGRESS);
-            }
-        }
-    }
+    /**
+     * Удаляет подзадачу по ее идентификатору.
+     *
+     * @param id идентификатор подзадачи, которую необходимо удалить
+     */
+    void deleteSubtask(int id);
 
-    public void deleteTask(int id) {
-        tasks.remove(id);
-    }
+    /**
+     * Удаляет эпик по его идентификатору.
+     *
+     * @param id идентификатор эпика, который необходимо удалить
+     */
+    void deleteEpic(int id);
+
+    /**
+     * Получает список всех задач.
+     *
+     * @return список всех задач
+     */
+    List<Task> getAllTasks();
+
+    /**
+     * Получает список всех подзадач.
+     *
+     * @return список всех подзадач
+     */
+    List<Subtask> getAllSubtasks();
+
+    /**
+     * Получает список всех эпиков.
+     *
+     * @return список всех эпиков
+     */
+    List<Epic> getAllEpics();
+
+    /**
+     * Обновляет существующую задачу.
+     *
+     * @param task задача с обновленными данными
+     */
+    void updateTask(Task task);
+
+    /**
+     * Обновляет существующую подзадачу.
+     *
+     * @param subtask подзадача с обновленными данными
+     */
+    void updateSubtask(Subtask subtask);
+
+    /**
+     * Обновляет существующий эпик.
+     *
+     * @param epic эпик с обновленными данными
+     */
+    void updateEpic(Epic epic);
+
+    /**
+     * Получает историю просмотров задач.
+     *
+     * @return список задач, которые были просмотрены
+     */
+    List<Task> getHistory();
 }
