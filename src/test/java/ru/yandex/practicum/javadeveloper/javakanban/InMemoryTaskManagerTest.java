@@ -3,6 +3,8 @@ package ru.yandex.practicum.javadeveloper.javakanban;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.javadeveloper.javakanban.Managers;
+import ru.yandex.practicum.javadeveloper.javakanban.TaskManager;
 
 import java.util.List;
 
