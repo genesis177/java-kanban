@@ -3,12 +3,11 @@ package ru.yandex.practicum.javadeveloper.javakanban;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.javadeveloper.javakanban.Managers;
-import ru.yandex.practicum.javadeveloper.javakanban.TaskManager;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 class InMemoryTaskManagerTest {
