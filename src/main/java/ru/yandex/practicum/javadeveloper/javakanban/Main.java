@@ -1,9 +1,13 @@
 package ru.yandex.practicum.javadeveloper.javakanban;
 
 
+import java.io.File;
+
 public class Main {
     public static void main(String[] args) {
         TaskManager manager = Managers.getDefault();
+        File file = new File("tasks.csv");
+        FileBackedTaskManager managers = new FileBackedTaskManager(file);
 
         Task task1 = new Task("Переезд", "Собрать вещи");
         Task task2 = new Task("Упаковать кошку", "Не забыть про кошку");
