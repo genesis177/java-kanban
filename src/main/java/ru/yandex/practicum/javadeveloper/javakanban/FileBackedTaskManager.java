@@ -5,67 +5,144 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
-
-public class FileBackedTaskManager extends InMemoryTaskManager {
-    private final File file;
+public class FileBackedTaskManager extends AbstractFileBackedTaskManager {
 
     public FileBackedTaskManager(File file) {
+        super(file);
+    }
+
+    public static FileBackedTaskManager loadFromFile(File file) {
+        FileBackedTaskManager manager = new FileBackedTaskManager(file);
+        try {
+            List<String> lines = Files.readAllLines(file.toPath());
+            for (String line : lines.subList(1, lines.size())) {
+                Task task = fromString(line);
+                if (task != null) {
+                    if (task instanceof Epic) {
+                        manager.createEpic((Epic) task);
+                    } else if (task instanceof Subtask) {
+                        manager.createSubtask((Subtask) task);
+                    } else {
+                        manager.createTask(task);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Ошибка загрузки из файла", e);
+        }
+        return manager;
+    }
+
+    @Override
+    public Task getTask(int id) {
+        return null;
+    }
+
+    @Override
+    public Subtask getSubtask(int id) {
+        return null;
+    }
+
+    @Override
+    public Epic getEpic(int id) {
+        return null;
+    }
+
+    @Override
+    public List<Task> getAllTasks() {
+        return List.of();
+    }
+
+    @Override
+    public List<Subtask> getAllSubtasks() {
+        return List.of();
+    }
+
+    @Override
+    public List<Epic> getAllEpics() {
+        return List.of();
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return List.of();
+    }
+}
+
+abstract class AbstractFileBackedTaskManager implements TaskManager {
+    private final File file;
+
+    public AbstractFileBackedTaskManager(File file) {
         this.file = file;
     }
 
     @Override
     public void createTask(Task task) {
-        super.createTask(task);
+        super.getClass();
         save();
     }
 
     @Override
     public void createSubtask(Subtask subtask) {
-        super.createSubtask(subtask);
+        super.getClass();
         save();
     }
 
     @Override
     public void createEpic(Epic epic) {
-        super.createEpic(epic);
+        try {
+            super.wait();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         save();
     }
 
     @Override
     public void updateTask(Task task) {
-        super.updateTask(task);
+        super.getClass();
         save();
     }
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        super.updateSubtask(subtask);
+        super.equals(subtask);
         save();
     }
 
     @Override
     public void updateEpic(Epic epic) {
-        super.updateEpic(epic);
+        try {
+            super.wait(epic.getId());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         save();
     }
 
     @Override
     public void deleteTask(int id) {
-        super.deleteTask(id);
+        super.getClass();
         save();
     }
 
     @Override
     public void deleteSubtask(int id) {
-        super.deleteSubtask(id);
+        super.getClass();
         save();
     }
 
     @Override
     public void deleteEpic(int id) {
-        super.deleteEpic(id);
+        try {
+            super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
         save();
     }
+
+
 
     private void save() {
         StringBuilder sb = new StringBuilder();
@@ -85,56 +162,30 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try {
             Files.writeString(file.toPath(), sb.toString());
         } catch (IOException e) {
-            try {
-                throw new ManagerSaveException("Ошибка сохранения в файл", e);
-            } catch (ManagerSaveException ex) {
-                throw new RuntimeException(ex);
-            }
+            throw new RuntimeException("Ошибка сохранения в файл", e);
         }
     }
 
     private String toString(Task task) {
-        return task.getId() + "," + "TASK" + "," + task.getTitle() + "," + task.getStatus() + "," + task.getDescription() + ",";
+        return task.getId() + ",TASK," + task.getTitle() + "," + task.getStatus() + "," + task.getDescription() + ",";
     }
 
     private String toString(Subtask subtask) {
-        return subtask.getId() + "," + "SUBTASK" + "," + subtask.getTitle() + "," + subtask.getStatus() + "," + subtask.getDescription() + "," + subtask.getParentEpicId();
+        return subtask.getId() + ",SUBTASK," + subtask.getTitle() + "," + subtask.getStatus() + "," + subtask.getDescription() + "," + subtask.getParentEpicId();
     }
 
     private String toString(Epic epic) {
-        return epic.getId() + "," + "EPIC" + "," + epic.getTitle() + "," + epic.getStatus() + "," + epic.getDescription() + ",";
+        return epic.getId() + ",EPIC," + epic.getTitle() + "," + epic.getStatus() + "," + epic.getDescription() + ",";
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager managers = new FileBackedTaskManager(file);
-        try {
-            List<String> lines = Files.readAllLines(file.toPath());
-            for (String line : lines.subList(1, lines.size())) {
-                Task task = fromString(line);
-                if (task != null) {
-                    if (task instanceof Epic) {
-                        managers.createEpic((Epic) task);
-                    } else if (task instanceof Subtask) {
-                        managers.createSubtask((Subtask) task);
-                    } else {
-                        managers.createTask(task);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Ошибка загрузки из файла", e); // Используем RuntimeException вместо ManagerSaveException
-        }
-        return managers;
-    }
-
-
-    private static Task fromString(String value) {
+    static Task fromString(String value) {
         String[] parts = value.split(",");
         int id = Integer.parseInt(parts[0]);
         String type = parts[1];
         String title = parts[2];
         Status status = Status.valueOf(parts[3]);
         String description = parts[4];
+
         if ("TASK".equals(type)) {
             Task task = new Task(title, description);
             task.setId(id);
@@ -154,10 +205,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
         return null;
     }
-
-    private static class ManagerSaveException extends Exception {
-        public ManagerSaveException(String message, Throwable cause) {
-            super(message, cause);
-        }
-    }
 }
+
+
+
+
+
+
+
+
