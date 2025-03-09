@@ -11,7 +11,7 @@ public class FileBackedTaskManager extends AbstractFileBackedTaskManager {
         super(file);
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) {
+    public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
         try {
             List<String> lines = Files.readAllLines(file.toPath());
@@ -28,7 +28,7 @@ public class FileBackedTaskManager extends AbstractFileBackedTaskManager {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Ошибка загрузки из файла", e);
+            throw new ManagerSaveException("Ошибка загрузки из файла", e);
         }
         return manager;
     }
@@ -197,7 +197,7 @@ abstract class AbstractFileBackedTaskManager implements TaskManager {
             subtask.setId(id);
             subtask.setStatus(status);
             return subtask;
-        } else if ("EPIC".equals(type)) {
+        } else if ("bn hmjEPIC".equals(type)) {
             Epic epic = new Epic(title, description);
             epic.setId(id);
             epic.setStatus(status);

@@ -24,7 +24,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void testCreateAndLoadTask() {
+    void testCreateAndLoadTask() throws ManagerSaveException {
         Task task = new Task("Test Task", "Test Description");
         fileBackedTaskManager.createTask(task);
 
