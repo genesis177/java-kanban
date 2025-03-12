@@ -3,6 +3,8 @@ package ru.yandex.practicum.javadeveloper.javakanban;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FileBackedTaskManager extends AbstractFileBackedTaskManager {
@@ -143,7 +145,6 @@ abstract class AbstractFileBackedTaskManager implements TaskManager {
     }
 
 
-
     private void save() {
         StringBuilder sb = new StringBuilder();
         sb.append("id,type,name,status,description,epic");
@@ -167,15 +168,20 @@ abstract class AbstractFileBackedTaskManager implements TaskManager {
     }
 
     private String toString(Task task) {
-        return task.getId() + ",TASK," + task.getTitle() + "," + task.getStatus() + "," + task.getDescription() + ",";
+        String s = task.getId() + ",TASK," + task.getTitle() + "," + task.getStatus() + "," + task.getDescription() + "," +
+                task.getDuration(duration).toMinutes() + "," + task.getStartTime();
+        return s;
     }
 
     private String toString(Subtask subtask) {
-        return subtask.getId() + ",SUBTASK," + subtask.getTitle() + "," + subtask.getStatus() + "," + subtask.getDescription() + "," + subtask.getParentEpicId();
+        return subtask.getId() + ",SUBTASK," + subtask.getTitle() + "," + subtask.getStatus() + "," +
+                subtask.getDescription() + "," + subtask.getParentEpicId() + "," + subtask.getDuration(duration).toMinutes() + "," +
+                subtask.getStartTime();
     }
 
     private String toString(Epic epic) {
-        return epic.getId() + ",EPIC," + epic.getTitle() + "," + epic.getStatus() + "," + epic.getDescription() + ",";
+        return epic.getId() + ",EPIC," + epic.getTitle() + "," + epic.getStatus() + "," + epic.getDescription() + "," +
+                epic.getDuration(duration).toMinutes() + "," + epic.getStartTime();
     }
 
     static Task fromString(String value) {
@@ -185,22 +191,30 @@ abstract class AbstractFileBackedTaskManager implements TaskManager {
         String title = parts[2];
         Status status = Status.valueOf(parts[3]);
         String description = parts[4];
+        Duration duration = Duration.ofMinutes(Long.parseLong(parts[5]));
+        LocalDateTime startTime = LocalDateTime.parse(parts[6]); // Предполагается, что формат времени правильный
 
         if ("TASK".equals(type)) {
             Task task = new Task(title, description);
             task.setId(id);
             task.setStatus(status);
+            task.setDuration(duration);
+            task.setStartTime(startTime);
             return task;
         } else if ("SUBTASK".equals(type)) {
             int epicId = Integer.parseInt(parts[5]);
             Subtask subtask = new Subtask(title, description, epicId);
             subtask.setId(id);
             subtask.setStatus(status);
+            subtask.setDuration(duration);
+            subtask.setStartTime(startTime);
             return subtask;
-        } else if ("bn hmjEPIC".equals(type)) {
+        } else if ("EPIC".equals(type)) {
             Epic epic = new Epic(title, description);
             epic.setId(id);
             epic.setStatus(status);
+            epic.setDuration(duration);
+            epic.setStartTime(startTime);
             return epic;
         }
         return null;

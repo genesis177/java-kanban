@@ -88,5 +88,17 @@ class InMemoryTaskManagerTest {
         assertEquals(task2, history.get(0)); // task2 должен быть первым
         assertEquals(task1, history.get(1)); // task1 должен быть вторым
     }
+    @Test
+    void testCreateTaskWithDurationAndStartTime() {
+        Task task = new Task("Test Task", "Description");
+        task.setDuration(Duration.ofMinutes(30));
+        task.setStartTime(LocalDateTime.now());
+
+        taskManager.createTask(task);
+
+        Task retrievedTask = taskManager.getTask(task.getId());
+        assertEquals(task.getDuration(duration), retrievedTask.getDuration(duration));
+        assertEquals(task.getStartTime(), retrievedTask.getStartTime());
+    }
 
 }

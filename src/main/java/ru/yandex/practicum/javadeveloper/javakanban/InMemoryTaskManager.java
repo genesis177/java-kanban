@@ -1,21 +1,21 @@
 package ru.yandex.practicum.javadeveloper.javakanban;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private final HistoryManager historyManager = Managers.getDefaultHistory();
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, Subtask> subtasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
+    private final TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
     private int idCounter = 1;
 
     @Override
     public void createTask(Task task) {
         task.setId(idCounter++);
         tasks.put(task.getId(), task);
+        prioritizedTasks.add(task);
     }
 
     @Override
@@ -72,16 +72,17 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 
-
     @Override
     public void deleteTask(int id) {
-        tasks.remove(id);
+        Task task = tasks.remove(id);
+        if (task != null) {
+            prioritizedTasks.remove(task);
+        }
     }
 
     @Override
@@ -113,6 +114,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task task) {
         tasks.put(task.getId(), task);
+        prioritizedTasks.add(task); // Добавляем или обновляем в приоритетном списке
     }
 
     @Override
@@ -130,13 +132,28 @@ public class InMemoryTaskManager implements TaskManager {
         updateEpicStatus(epic);
     }
 
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks);
+    }
 
-
+    public boolean isOverlapping(Task newTask) {
+        for (Task existingTask : getAllTasks()) {
+            if (existingTask.getStartTime() != null && newTask.getStartTime() != null) {
+                LocalDateTime existingEndTime = existingTask.getEndTime();
+                LocalDateTime newEndTime = newTask.getEndTime();
+                if (existingEndTime != null && newEndTime != null) {
+                    if (existingTask.getStartTime().isBefore(newEndTime) && newTask.getStartTime().isBefore(existingEndTime)) {
+                        return true; // Задачи пересекаются
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     private void addToHistory(Task task) {
         historyManager.add(task);
     }
-
 
     private void updateEpicStatus(Epic epic) {
         List<Integer> subtaskIds = epic.getSubtaskIds();

@@ -1,10 +1,15 @@
 package ru.yandex.practicum.javadeveloper.javakanban;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Task {
     private String title;
     private String description;
     private int id;
     private Status status;
+    private LocalDateTime startTime;
+    private Duration duration;
 
     public Task(String title, String description) {
         this.title = title;
@@ -34,6 +39,29 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Duration getDuration(Duration duration) {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null) {
+            return null; // Если startTime или duration не заданы
+        }
+        return startTime.plus(duration);
     }
 
     @Override

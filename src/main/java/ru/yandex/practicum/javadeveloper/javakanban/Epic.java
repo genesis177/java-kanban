@@ -1,37 +1,66 @@
 package ru.yandex.practicum.javadeveloper.javakanban;
 
-import java.util.ArrayList;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
-// Класс Epic представляет собой задачу, которая может содержать подзадачи.
 public class Epic extends Task {
-    // Список идентификаторов подзадач, связанных с этой задачей.
     private List<Integer> subtaskIds;
 
-    // Конструктор класса Epic, который принимает заголовок и описание задачи.
     public Epic(String title, String description) {
-        // Вызов конструктора родительского класса Task для инициализации заголовка и описания.
         super(title, description);
-
-        // Инициализация списка идентификаторов подзадач как нового ArrayList.
         this.subtaskIds = new ArrayList<>();
     }
 
-    // Метод для добавления идентификатора подзадачи в список подзадач.
     public void addSubtask(int subtaskId) {
-        // Добавляет идентификатор подзадачи в список.
         subtaskIds.add(subtaskId);
     }
 
-    // Метод для получения списка идентификаторов подзадач.
     public List<Integer> getSubtaskIds() {
-        // Возвращает список идентификаторов подзадач.
         return subtaskIds;
     }
 
-    // Метод для очистки списка подзадач, удаляя все идентификаторы.
     public void clearSubtasks() {
-        // Очищает список идентификаторов подзадач.
         subtaskIds.clear();
+    }
+
+    @Override
+    public Duration getDuration(Duration duration) {
+        Duration totalDuration = Duration.ZERO;
+        for (Integer subtaskId : subtaskIds) {
+            Subtask subtask = (Subtask) TaskManager.getTask(subtaskId); // Предполагаем, что TaskManager доступен
+            if (subtask != null && subtask.getDuration(duration) != null) {
+                totalDuration = totalDuration.plus(subtask.getDuration(duration));
+            }
+        }
+        return totalDuration; // Возвращает общую продолжительность
+    }
+
+    @Override
+    public LocalDateTime getStartTime() {
+        LocalDateTime earliestStart = null;
+        for (Integer subtaskId : subtaskIds) {
+            Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
+            if (subtask != null && subtask.getStartTime() != null) {
+                if (earliestStart == null || subtask.getStartTime().isBefore(earliestStart)) {
+                    earliestStart = subtask.getStartTime();
+                }
+            }
+        }
+        return earliestStart; // Возвращает время начала самой ранней подзадачи
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        LocalDateTime latestEnd = null;
+        for (Integer subtaskId : subtaskIds) {
+            Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
+            if (subtask != null && subtask.getEndTime() != null) {
+                if (latestEnd == null || subtask.getEndTime().isAfter(latestEnd)) {
+                    latestEnd = subtask.getEndTime();
+                }
+            }
+        }
+        return latestEnd; // Возвращает время окончания самой поздней подзадачи
     }
 }
