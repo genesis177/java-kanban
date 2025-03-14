@@ -2,6 +2,7 @@ package ru.yandex.practicum.javadeveloper.javakanban;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
@@ -25,15 +26,15 @@ public class Epic extends Task {
     }
 
     @Override
-    public Duration getDuration(Duration duration) {
+    public Duration getDuration() {
         Duration totalDuration = Duration.ZERO;
         for (Integer subtaskId : subtaskIds) {
-            Subtask subtask = (Subtask) TaskManager.getTask(subtaskId); // Предполагаем, что TaskManager доступен
-            if (subtask != null && subtask.getDuration(duration) != null) {
-                totalDuration = totalDuration.plus(subtask.getDuration(duration));
+            Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
+            if (subtask != null) {
+                totalDuration = totalDuration.plus(subtask.getDuration());
             }
         }
-        return totalDuration; // Возвращает общую продолжительность
+        return totalDuration;
     }
 
     @Override
@@ -41,13 +42,14 @@ public class Epic extends Task {
         LocalDateTime earliestStart = null;
         for (Integer subtaskId : subtaskIds) {
             Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
-            if (subtask != null && subtask.getStartTime() != null) {
-                if (earliestStart == null || subtask.getStartTime().isBefore(earliestStart)) {
-                    earliestStart = subtask.getStartTime();
+            if (subtask != null) {
+                LocalDateTime subtaskStart = subtask.getStartTime();
+                if (subtaskStart != null && (earliestStart == null || subtaskStart.isBefore(earliestStart))) {
+                    earliestStart = subtaskStart;
                 }
             }
         }
-        return earliestStart; // Возвращает время начала самой ранней подзадачи
+        return earliestStart;
     }
 
     @Override
@@ -55,12 +57,13 @@ public class Epic extends Task {
         LocalDateTime latestEnd = null;
         for (Integer subtaskId : subtaskIds) {
             Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
-            if (subtask != null && subtask.getEndTime() != null) {
-                if (latestEnd == null || subtask.getEndTime().isAfter(latestEnd)) {
-                    latestEnd = subtask.getEndTime();
+            if (subtask != null) {
+                LocalDateTime subtaskEnd = subtask.getEndTime();
+                if (subtaskEnd != null && (latestEnd == null || subtaskEnd.isAfter(latestEnd))) {
+                    latestEnd = subtaskEnd;
                 }
             }
         }
-        return latestEnd; // Возвращает время окончания самой поздней подзадачи
+        return latestEnd;
     }
 }

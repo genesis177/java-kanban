@@ -3,14 +3,18 @@ package ru.yandex.practicum.javadeveloper.javakanban;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.Duration;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class FileBackedTaskManager extends AbstractFileBackedTaskManager {
+import static java.nio.file.attribute.PosixFilePermissions.fromString;
+
+public class FileBackedTaskManager  {
+
+    private File file;
 
     public FileBackedTaskManager(File file) {
-        super(file);
+        super();
     }
 
     public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
@@ -18,7 +22,7 @@ public class FileBackedTaskManager extends AbstractFileBackedTaskManager {
         try {
             List<String> lines = Files.readAllLines(file.toPath());
             for (String line : lines.subList(1, lines.size())) {
-                Task task = fromString(line);
+                Task task = (Task) fromString(line);
                 if (task != null) {
                     if (task instanceof Epic) {
                         manager.createEpic((Epic) task);
@@ -35,120 +39,33 @@ public class FileBackedTaskManager extends AbstractFileBackedTaskManager {
         return manager;
     }
 
-    @Override
-    public Task getTask(int id) {
-        return null;
-    }
-
-    @Override
-    public Subtask getSubtask(int id) {
-        return null;
-    }
-
-    @Override
-    public Epic getEpic(int id) {
-        return null;
-    }
-
-    @Override
-    public List<Task> getAllTasks() {
-        return List.of();
-    }
-
-    @Override
-    public List<Subtask> getAllSubtasks() {
-        return List.of();
-    }
-
-    @Override
-    public List<Epic> getAllEpics() {
-        return List.of();
-    }
-
-    @Override
-    public List<Task> getHistory() {
-        return List.of();
-    }
-}
-
-abstract class AbstractFileBackedTaskManager implements TaskManager {
-    private final File file;
-
-    public AbstractFileBackedTaskManager(File file) {
-        this.file = file;
-    }
-
-    @Override
     public void createTask(Task task) {
-        super.getClass();
+        // Сохранить задачу
+        task.put(task.getId(), task);
         save();
     }
 
-    @Override
+
     public void createSubtask(Subtask subtask) {
-        super.getClass();
+        subtask.put(subtask.getId(), subtask);
+        if (false) {
+            Epic epic = epic.get(subtask.getParentEpicId());
+            if (epic != null) {
+                epic.addSubtask(subtask.getId());
+            }
+        }
         save();
     }
 
-    @Override
+
     public void createEpic(Epic epic) {
-        try {
-            super.wait();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        epic.put(epic.getId(), epic);
         save();
     }
-
-    @Override
-    public void updateTask(Task task) {
-        super.getClass();
-        save();
-    }
-
-    @Override
-    public void updateSubtask(Subtask subtask) {
-        super.equals(subtask);
-        save();
-    }
-
-    @Override
-    public void updateEpic(Epic epic) {
-        try {
-            super.wait(epic.getId());
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        save();
-    }
-
-    @Override
-    public void deleteTask(int id) {
-        super.getClass();
-        save();
-    }
-
-    @Override
-    public void deleteSubtask(int id) {
-        super.getClass();
-        save();
-    }
-
-    @Override
-    public void deleteEpic(int id) {
-        try {
-            super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
-        save();
-    }
-
 
     private void save() {
         StringBuilder sb = new StringBuilder();
-        sb.append("id,type,name,status,description,epic");
-
+        sb.append("id,type,name,status,description,duration,startTime");
 
         for (Task task : getAllTasks()) {
             sb.append(toString(task)).append("\n");
@@ -167,57 +84,29 @@ abstract class AbstractFileBackedTaskManager implements TaskManager {
         }
     }
 
-    private String toString(Task task) {
-        String s = task.getId() + ",TASK," + task.getTitle() + "," + task.getStatus() + "," + task.getDescription() + "," +
-                task.getDuration(duration).toMinutes() + "," + task.getStartTime();
-        return s;
+    private Task[] getAllTasks() {
     }
 
-    private String toString(Subtask subtask) {
-        return subtask.getId() + ",SUBTASK," + subtask.getTitle() + "," + subtask.getStatus() + "," +
-                subtask.getDescription() + "," + subtask.getParentEpicId() + "," + subtask.getDuration(duration).toMinutes() + "," +
-                subtask.getStartTime();
-    }
-
-    private String toString(Epic epic) {
-        return epic.getId() + ",EPIC," + epic.getTitle() + "," + epic.getStatus() + "," + epic.getDescription() + "," +
-                epic.getDuration(duration).toMinutes() + "," + epic.getStartTime();
-    }
-
-    static Task fromString(String value) {
-        String[] parts = value.split(",");
-        int id = Integer.parseInt(parts[0]);
-        String type = parts[1];
-        String title = parts[2];
-        Status status = Status.valueOf(parts[3]);
-        String description = parts[4];
-        Duration duration = Duration.ofMinutes(Long.parseLong(parts[5]));
-        LocalDateTime startTime = LocalDateTime.parse(parts[6]); // Предполагается, что формат времени правильный
-
-        if ("TASK".equals(type)) {
-            Task task = new Task(title, description);
-            task.setId(id);
-            task.setStatus(status);
-            task.setDuration(duration);
-            task.setStartTime(startTime);
-            return task;
-        } else if ("SUBTASK".equals(type)) {
-            int epicId = Integer.parseInt(parts[5]);
-            Subtask subtask = new Subtask(title, description, epicId);
-            subtask.setId(id);
-            subtask.setStatus(status);
-            subtask.setDuration(duration);
-            subtask.setStartTime(startTime);
-            return subtask;
-        } else if ("EPIC".equals(type)) {
-            Epic epic = new Epic(title, description);
-            epic.setId(id);
-            epic.setStatus(status);
-            epic.setDuration(duration);
-            epic.setStartTime(startTime);
-            return epic;
-        }
+    private Subtask[] getAllSubtasks() {
         return null;
+    }
+
+    private Epic[] getAllEpics() {
+        return null;
+    }
+
+    private String toString(Task task) {
+        return task.getId() + ",TASK," + task.getTitle() + "," + task.getStatus() + "," + task.getDescription() + ","
+                + task.getDuration().toMinutes() + "," + (task.getStartTime() != null ? task.getStartTime() : "");
+    }
+    private boolean isOverlapping(Task task1, Task task2) {
+        LocalDateTime start1 = task1.getStartTime();
+        LocalDateTime end1 = task1.getEndTime();
+        LocalDateTime start2 = task2.getStartTime();
+        LocalDateTime end2 = task2.getEndTime();
+
+        return (start1 != null && end1 != null && start2 != null && end2 != null) &&
+                (start1.isBefore(end2) && start2.isBefore(end1));
     }
 }
 
