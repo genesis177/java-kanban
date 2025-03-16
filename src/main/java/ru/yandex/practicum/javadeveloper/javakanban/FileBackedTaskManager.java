@@ -9,7 +9,7 @@ import java.util.List;
 
 import static java.nio.file.attribute.PosixFilePermissions.fromString;
 
-public class FileBackedTaskManager  {
+public class FileBackedTaskManager extends InMemoryTaskManager  {
 
     private File file;
 
@@ -39,28 +39,22 @@ public class FileBackedTaskManager  {
         return manager;
     }
 
+    @Override
     public void createTask(Task task) {
-        // Сохранить задачу
-        task.put(task.getId(), task);
+        super.createTask(task);
         save();
     }
 
-
+    @Override
     public void createSubtask(Subtask subtask) {
-        subtask.put(subtask.getId(), subtask);
-        if (false) {
-            Epic epic = epic.get(subtask.getParentEpicId());
-            if (epic != null) {
-                epic.addSubtask(subtask.getId());
-            }
-        }
+        super.createSubtask(subtask);
         save();
     }
 
-
+    @Override
     public void createEpic(Epic epic) {
-        epic.put(epic.getId(), epic);
-        save();
+        super.createEpic(epic);
+        save(); 
     }
 
     private void save() {
@@ -84,14 +78,16 @@ public class FileBackedTaskManager  {
         }
     }
 
-    private Task[] getAllTasks() {
-    }
 
-    private Subtask[] getAllSubtasks() {
+    public List<Task> getAllTasks() {
         return null;
     }
 
-    private Epic[] getAllEpics() {
+    public List<Subtask> getAllSubtasks() {
+        return null;
+    }
+
+    public List<Epic> getAllEpics() {
         return null;
     }
 

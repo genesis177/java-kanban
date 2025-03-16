@@ -74,9 +74,17 @@ public class Task {
         return Integer.hashCode(id);
     }
 
-    public void put(int id, Task task) {
-    }
 
     public Duration getDuration() {
+
+
+        return null;
+    }
+
+    public void createTask(Task task) {
+    }
+
+    public Task getTask(int id) {
     }
 }
+

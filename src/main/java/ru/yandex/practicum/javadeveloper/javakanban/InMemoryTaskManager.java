@@ -136,14 +136,14 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(prioritizedTasks);
     }
 
-    public boolean isOverlapping(Task newTask) {
+    private boolean isOverlapping(Task newTask) {
         for (Task existingTask : getAllTasks()) {
             if (existingTask.getStartTime() != null && newTask.getStartTime() != null) {
                 LocalDateTime existingEndTime = existingTask.getEndTime();
                 LocalDateTime newEndTime = newTask.getEndTime();
                 if (existingEndTime != null && newEndTime != null) {
                     if (existingTask.getStartTime().isBefore(newEndTime) && newTask.getStartTime().isBefore(existingEndTime)) {
-                        return true; // Задачи пересекаются
+                        return true;
                     }
                 }
             }

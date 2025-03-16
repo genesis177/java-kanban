@@ -27,6 +27,7 @@ public class Epic extends Task {
 
     @Override
     public Duration getDuration() {
+
         Duration totalDuration = Duration.ZERO;
         for (Integer subtaskId : subtaskIds) {
             Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
@@ -39,6 +40,7 @@ public class Epic extends Task {
 
     @Override
     public LocalDateTime getStartTime() {
+
         LocalDateTime earliestStart = null;
         for (Integer subtaskId : subtaskIds) {
             Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
@@ -54,6 +56,7 @@ public class Epic extends Task {
 
     @Override
     public LocalDateTime getEndTime() {
+
         LocalDateTime latestEnd = null;
         for (Integer subtaskId : subtaskIds) {
             Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);

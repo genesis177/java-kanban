@@ -31,7 +31,10 @@ public interface TaskManager {
      * @param id идентификатор задачи
      * @return задача с указанным идентификатором
      */
-    Task getTask(int id);
+
+
+
+
 
     /**
      * Получает подзадачу по ее идентификатору.

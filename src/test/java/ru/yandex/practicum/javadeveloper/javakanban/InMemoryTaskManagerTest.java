@@ -4,6 +4,8 @@ package ru.yandex.practicum.javadeveloper.javakanban;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class InMemoryTaskManagerTest {
 
     private TaskManager taskManager;
+    private Duration duration;
 
 
     @BeforeEach
@@ -30,7 +33,7 @@ class InMemoryTaskManagerTest {
 
         taskManager.createTask(task);
 
-        Task retrievedTask = taskManager.getTask(task.getId());
+        Task retrievedTask = TaskManager.getTask(task.getId());
 
         assertNotNull(retrievedTask);
 
@@ -53,10 +56,10 @@ class InMemoryTaskManagerTest {
         taskManager.createTask(task2);
 
 
-        taskManager.getTask(task1.getId());
+        TaskManager.getTask(task1.getId());
 
 
-        taskManager.getTask(task2.getId());
+        TaskManager.getTask(task2.getId());
 
 
         List<Task> history = taskManager.getHistory();
@@ -79,9 +82,9 @@ class InMemoryTaskManagerTest {
         taskManager.createTask(task1);
         taskManager.createTask(task2);
 
-        taskManager.getTask(task1.getId());
-        taskManager.getTask(task2.getId());
-        taskManager.getTask(task1.getId()); // Повторный просмотр task1
+        TaskManager.getTask(task1.getId());
+        TaskManager.getTask(task2.getId());
+        TaskManager.getTask(task1.getId()); // Повторный просмотр task1
 
         List<Task> history = taskManager.getHistory();
         assertEquals(2, history.size());
@@ -96,7 +99,7 @@ class InMemoryTaskManagerTest {
 
         taskManager.createTask(task);
 
-        Task retrievedTask = taskManager.getTask(task.getId());
+        Task retrievedTask = TaskManager.getTask(task.getId());
         assertEquals(task.getDuration(duration), retrievedTask.getDuration(duration));
         assertEquals(task.getStartTime(), retrievedTask.getStartTime());
     }
