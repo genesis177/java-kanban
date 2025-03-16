@@ -4,6 +4,10 @@ import java.util.List;
 
 public interface TaskManager {
 
+    static Object getTask(Integer subtaskId) {
+        return null;
+    }
+
     /**
      * Создает новую задачу.
      *
