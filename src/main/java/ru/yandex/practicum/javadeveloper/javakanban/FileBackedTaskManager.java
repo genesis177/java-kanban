@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.nio.file.attribute.PosixFilePermissions.fromString;
@@ -78,18 +79,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager  {
         }
     }
 
-
+    @Override
     public List<Task> getAllTasks() {
-        return null;
+        return new ArrayList<>(tasks.values());
     }
 
+    @Override
     public List<Subtask> getAllSubtasks() {
-        return null;
+        return new ArrayList<>(subtasks.values());
     }
 
+    @Override
     public List<Epic> getAllEpics() {
-        return null;
+        return new ArrayList<>(epics.values());
     }
+
 
     private String toString(Task task) {
         return task.getId() + ",TASK," + task.getTitle() + "," + task.getStatus() + "," + task.getDescription() + ","

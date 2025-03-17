@@ -15,76 +15,40 @@ public class Task {
         this.title = title;
         this.description = description;
         this.status = Status.NEW;
+        this.duration = Duration.ZERO; // Initialize duration
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public Duration getDuration(Duration duration) {
-        return duration;
-    }
-
-    public void setDuration(Duration duration) {
-        this.duration = duration;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
+    // Getters and Setters
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
+    public int getId() { return id; }
+    public Status getStatus() { return status; }
+    public void setId(int id) { this.id = id; }
+    public void setStatus(Status status) { this.status = status; }
+    public Duration getDuration() { return duration; }
+    public void setDuration(Duration duration) { this.duration = duration; }
+    public LocalDateTime getStartTime() { return startTime; }
+    public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
 
     public LocalDateTime getEndTime() {
         if (startTime == null || duration == null) {
-            return null; // Если startTime или duration не заданы
+            return null;
         }
         return startTime.plus(duration);
     }
 
     @Override
     public boolean equals(Object o) {
-        return false;
+        if (this == o) return true;
+        if (!(o instanceof Task)) return false;
+        Task task = (Task) o;
+        return id == task.id;
     }
 
     @Override
     public int hashCode() {
         return Integer.hashCode(id);
     }
-
-
-    public Duration getDuration() {
-
-
-        return null;
-    }
-
-    public void createTask(Task task) {
-    }
-
-    public Task getTask(int id) {
-    }
 }
+
 

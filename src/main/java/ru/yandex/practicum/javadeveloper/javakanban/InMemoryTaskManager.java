@@ -5,9 +5,9 @@ import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private final HistoryManager historyManager = Managers.getDefaultHistory();
-    private final Map<Integer, Task> tasks = new HashMap<>();
-    private final Map<Integer, Subtask> subtasks = new HashMap<>();
-    private final Map<Integer, Epic> epics = new HashMap<>();
+    public final Map<Integer, Task> tasks = new HashMap<>();
+    public final Map<Integer, Subtask> subtasks = new HashMap<>();
+    public final Map<Integer, Epic> epics = new HashMap<>();
     private final TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
     private int idCounter = 1;
 
@@ -35,7 +35,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    @Override
     public Task getTask(int id) {
         Task task = tasks.get(id);
         if (task != null) {

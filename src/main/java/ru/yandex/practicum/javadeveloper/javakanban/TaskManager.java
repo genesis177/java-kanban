@@ -37,6 +37,9 @@ public interface TaskManager {
      */
 
 
+    static Task getTask(int id) {
+        return null;
+    }
 
 
 
