@@ -1,6 +1,5 @@
 package ru.yandex.practicum.javadeveloper.javakanban;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,22 +24,10 @@ public class Epic extends Task {
         subtaskIds.clear();
     }
 
-    @Override
-    public Duration getDuration() {
 
-        Duration totalDuration = Duration.ZERO;
-        for (Integer subtaskId : subtaskIds) {
-            Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
-            if (subtask != null) {
-                totalDuration = totalDuration.plus(subtask.getDuration());
-            }
-        }
-        return totalDuration;
-    }
 
     @Override
     public LocalDateTime getStartTime() {
-
         LocalDateTime earliestStart = null;
         for (Integer subtaskId : subtaskIds) {
             Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
@@ -56,7 +43,6 @@ public class Epic extends Task {
 
     @Override
     public LocalDateTime getEndTime() {
-
         LocalDateTime latestEnd = null;
         for (Integer subtaskId : subtaskIds) {
             Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
