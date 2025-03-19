@@ -33,12 +33,14 @@ public class Epic extends Task {
             Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
             if (subtask != null) {
                 LocalDateTime subtaskStart = subtask.getStartTime();
-                if (subtaskStart != null && (earliestStart == null || subtaskStart.isBefore(earliestStart))) {
-                    earliestStart = subtaskStart;
+                if (subtaskStart != null) {
+                    if (earliestStart == null || subtaskStart.isBefore(earliestStart)) {
+                        earliestStart = subtaskStart;
+                    }
                 }
             }
         }
-        return earliestStart;
+        return earliestStart; // Вернёт null, если подзадач нет или у них нет времени начала
     }
 
     @Override
@@ -48,11 +50,13 @@ public class Epic extends Task {
             Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
             if (subtask != null) {
                 LocalDateTime subtaskEnd = subtask.getEndTime();
-                if (subtaskEnd != null && (latestEnd == null || subtaskEnd.isAfter(latestEnd))) {
-                    latestEnd = subtaskEnd;
+                if (subtaskEnd != null) {
+                    if (latestEnd == null || subtaskEnd.isAfter(latestEnd)) {
+                        latestEnd = subtaskEnd;
+                    }
                 }
             }
         }
-        return latestEnd;
+        return latestEnd; // Вернёт null, если подзадач нет или у них нет времени окончания
     }
-}
+    }
