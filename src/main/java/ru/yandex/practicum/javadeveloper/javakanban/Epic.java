@@ -59,4 +59,4 @@ public class Epic extends Task {
         }
         return latestEnd; // Вернёт null, если подзадач нет или у них нет времени окончания
     }
-    }
+}
