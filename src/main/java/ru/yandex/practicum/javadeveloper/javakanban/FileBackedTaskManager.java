@@ -58,31 +58,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager  {
         save(); 
     }
 
-    private void save() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("id,type,name,status,description,duration,startTime");
-
-        for (Task task : getAllTasks()) {
-            sb.append(toString(task)).append("\n");
-        }
-        for (Subtask subtask : getAllSubtasks()) {
-            sb.append(toString(subtask)).append("\n");
-        }
-        for (Epic epic : getAllEpics()) {
-            sb.append(toString(epic)).append("\n");
-        }
-
-        try {
-            Files.writeString(file.toPath(), sb.toString());
-        } catch (IOException e) {
-            throw new RuntimeException("Ошибка сохранения в файл", e);
-        }
-    }
-
-    @Override
-    public List<Task> getAllTasks() {
-        return new ArrayList<>(tasks.values());
-    }
 
     @Override
     public List<Subtask> getAllSubtasks() {
@@ -108,7 +83,28 @@ public class FileBackedTaskManager extends InMemoryTaskManager  {
         return (start1 != null && end1 != null && start2 != null && end2 != null) &&
                 (start1.isBefore(end2) && start2.isBefore(end1));
     }
+    private void save() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("id,type,name,status,description,duration,startTime");
+
+        for (Task task : getAllTasks()) {
+            sb.append(toString(task)).append("\n");
+        }
+        for (Subtask subtask : getAllSubtasks()) {
+            sb.append(toString(subtask)).append("\n");
+        }
+        for (Epic epic : getAllEpics()) {
+            sb.append(toString(epic)).append("\n");
+        }
+
+        try {
+            Files.writeString(file.toPath(), sb.toString());
+        } catch (IOException e) {
+            throw new RuntimeException("Ошибка сохранения в файл", e);
+        }
+    }
 }
+
 
 
 

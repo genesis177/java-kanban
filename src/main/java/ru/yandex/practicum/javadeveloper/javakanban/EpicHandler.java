@@ -14,19 +14,21 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        switch (exchange.getRequestMethod()) {
-            case "GET":
+        String requestMethod = exchange.getRequestMethod();
 
-                break;
-            case "POST":
-
-                break;
-            case "DELETE":
-
-                break;
-            default:
-                sendText(exchange, "Method not allowed", 405);
-                break;
+        if ("GET".equals(requestMethod)) {
+            // Логика обработки GET-запроса
+        } else if ("POST".equals(requestMethod)) {
+            // Логика обработки POST-запроса
+        } else if ("PUT".equals(requestMethod)) {
+            // Логика обработки PUT-запроса
+        } else if ("PATCH".equals(requestMethod)) {
+            // Логика обработки PATCH-запроса
+        } else if ("DELETE".equals(requestMethod)) {
+            // Логика обработки DELETE-запроса
+        } else {
+            sendText(exchange, "Method not allowed", 405);
         }
     }
 }
+

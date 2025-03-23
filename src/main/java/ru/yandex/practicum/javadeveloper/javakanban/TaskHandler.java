@@ -14,19 +14,16 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        switch (exchange.getRequestMethod()) {
-            case "GET":
+        String requestMethod = exchange.getRequestMethod();
 
-                break;
-            case "POST":
-
-                break;
-            case "DELETE":
-
-                break;
-            default:
-                sendText(exchange, "Method not allowed", 405);
-                break;
+        if ("GET".equals(requestMethod)) {
+            // Обработка GET-запроса
+        } else if ("POST".equals(requestMethod)) {
+            // Обработка POST-запроса
+        } else if ("DELETE".equals(requestMethod)) {
+            // Обработка DELETE-запроса
+        } else {
+            sendText(exchange, "Method not allowed", 405);
         }
     }
 }

@@ -4,10 +4,6 @@ import java.util.List;
 
 public interface TaskManager {
 
-    static Object getTask(Integer subtaskId) {
-        return null;
-    }
-
     /**
      * Создает новую задачу.
      *
@@ -35,13 +31,6 @@ public interface TaskManager {
      * @param id идентификатор задачи
      * @return задача с указанным идентификатором
      */
-
-
-    static Task getTask(int id) {
-        return null;
-    }
-
-
 
     /**
      * Получает подзадачу по ее идентификатору.
