@@ -12,23 +12,44 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
         this.taskManager = taskManager;
     }
 
+    //Могу ли я оставить реализацию case? Мне так удобнее и понятнее
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String requestMethod = exchange.getRequestMethod();
 
-        if ("GET".equals(requestMethod)) {
-            // Логика обработки GET-запроса
-        } else if ("POST".equals(requestMethod)) {
-            // Логика обработки POST-запроса
-        } else if ("PUT".equals(requestMethod)) {
-            // Логика обработки PUT-запроса
-        } else if ("PATCH".equals(requestMethod)) {
-            // Логика обработки PATCH-запроса
-        } else if ("DELETE".equals(requestMethod)) {
-            // Логика обработки DELETE-запроса
-        } else {
-            sendText(exchange, "Method not allowed", 405);
+        switch (requestMethod) {
+            case "GET":
+                // Логика обработки GET-запроса
+
+                sendText(exchange, "Список эпиков", 200);
+                break;
+            case "POST":
+                // Логика обработки POST-запроса
+
+                sendText(exchange, "Эпик создан", 201);
+                break;
+            case "PUT":
+                // Логика обработки PUT-запроса
+
+                sendText(exchange, "Эпик обновлён", 200);
+                break;
+            case "PATCH":
+                // Логика обработки PATCH-запроса
+
+                sendText(exchange, "Эпик частично обновлён", 200);
+                break;
+            case "DELETE":
+                // Логика обработки DELETE-запроса
+
+                sendText(exchange, "Эпик удалён", 200);
+                break;
+            default:
+                sendText(exchange, "Метод не разрешён", 405);
+                break;
         }
     }
 }
+
+
 

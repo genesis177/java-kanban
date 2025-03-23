@@ -74,6 +74,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager  {
         return task.getId() + ",TASK," + task.getTitle() + "," + task.getStatus() + "," + task.getDescription() + ","
                 + task.getDuration().toMinutes() + "," + (task.getStartTime() != null ? task.getStartTime() : "");
     }
+
     private boolean isOverlapping(Task task1, Task task2) {
         LocalDateTime start1 = task1.getStartTime();
         LocalDateTime end1 = task1.getEndTime();
@@ -82,7 +83,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager  {
 
         return (start1 != null && end1 != null && start2 != null && end2 != null) &&
                 (start1.isBefore(end2) && start2.isBefore(end1));
+
     }
+
     private void save() {
         StringBuilder sb = new StringBuilder();
         sb.append("id,type,name,status,description,duration,startTime");

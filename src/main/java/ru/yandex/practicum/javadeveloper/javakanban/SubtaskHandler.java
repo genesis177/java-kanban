@@ -1,8 +1,8 @@
 package ru.yandex.practicum.javadeveloper.javakanban;
 
-
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+
 import java.io.IOException;
 
 public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
@@ -16,16 +16,19 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         switch (exchange.getRequestMethod()) {
             case "GET":
-
+                // Логика обработки GET-запроса
+                sendText(exchange, "Список подзадач", 200);
                 break;
             case "POST":
-
+                // Логика обработки POST-запроса
+                sendText(exchange, "Подзадача создана", 201);
                 break;
             case "DELETE":
-
+                // Логика обработки DELETE-запроса
+                sendText(exchange, "Подзадача удалена", 200);
                 break;
             default:
-                sendText(exchange, "Method not allowed", 405);
+                sendText(exchange, "Метод не разрешён", 405);
                 break;
         }
     }

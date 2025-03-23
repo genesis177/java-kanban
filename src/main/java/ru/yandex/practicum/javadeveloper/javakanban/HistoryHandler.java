@@ -16,10 +16,12 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         switch (exchange.getRequestMethod()) {
             case "GET":
+                // Логика обработки GET-запроса
 
+                sendText(exchange, "История задач", 200);
                 break;
             default:
-                sendText(exchange, "Method not allowed", 405);
+                sendText(exchange, "Метод не разрешён", 405);
                 break;
         }
     }

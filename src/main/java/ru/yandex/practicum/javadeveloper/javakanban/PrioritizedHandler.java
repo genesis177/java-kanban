@@ -14,14 +14,23 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        if ("GET".equals(exchange.getRequestMethod())) {
-            // Логика обработки GET-запроса
-        } else if ("PATCH".equals(exchange.getRequestMethod())) {
-            // Логика обработки PATCH-запроса
-        } else if ("PUT".equals(exchange.getRequestMethod())) {
-            // Логика обработки PUT-запроса
-        } else {
-            sendText(exchange, "Method not allowed", 405);
+        switch (exchange.getRequestMethod()) {
+            case "GET":
+                // Логика обработки GET-запроса
+
+                sendText(exchange, "Приоритетные задачи", 200);
+                break;
+            case "PATCH":
+                // Логика обработки PATCH-запроса
+                sendText(exchange, "Приоритет задачи обновлён", 200);
+                break;
+            case "PUT":
+                // Логика обработки PUT-запроса
+                sendText(exchange, "Приоритет задачи обновлён", 200);
+                break;
+            default:
+                sendText(exchange, "Метод не разрешён", 405);
+                break;
         }
     }
 }
