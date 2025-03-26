@@ -1,37 +1,62 @@
 package ru.yandex.practicum.javadeveloper.javakanban;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-// Класс Epic представляет собой задачу, которая может содержать подзадачи.
 public class Epic extends Task {
-    // Список идентификаторов подзадач, связанных с этой задачей.
     private List<Integer> subtaskIds;
 
-    // Конструктор класса Epic, который принимает заголовок и описание задачи.
     public Epic(String title, String description) {
-        // Вызов конструктора родительского класса Task для инициализации заголовка и описания.
         super(title, description);
-
-        // Инициализация списка идентификаторов подзадач как нового ArrayList.
         this.subtaskIds = new ArrayList<>();
     }
 
-    // Метод для добавления идентификатора подзадачи в список подзадач.
     public void addSubtask(int subtaskId) {
-        // Добавляет идентификатор подзадачи в список.
         subtaskIds.add(subtaskId);
     }
 
-    // Метод для получения списка идентификаторов подзадач.
     public List<Integer> getSubtaskIds() {
-        // Возвращает список идентификаторов подзадач.
         return subtaskIds;
     }
 
-    // Метод для очистки списка подзадач, удаляя все идентификаторы.
     public void clearSubtasks() {
-        // Очищает список идентификаторов подзадач.
         subtaskIds.clear();
+    }
+
+
+
+    @Override
+    public LocalDateTime getStartTime() {
+        LocalDateTime earliestStart = null;
+        for (Integer subtaskId : subtaskIds) {
+            Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
+            if (subtask != null) {
+                LocalDateTime subtaskStart = subtask.getStartTime();
+                if (subtaskStart != null) {
+                    if (earliestStart == null || subtaskStart.isBefore(earliestStart)) {
+                        earliestStart = subtaskStart;
+                    }
+                }
+            }
+        }
+        return earliestStart; // Вернёт null, если подзадач нет или у них нет времени начала
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        LocalDateTime latestEnd = null;
+        for (Integer subtaskId : subtaskIds) {
+            Subtask subtask = (Subtask) TaskManager.getTask(subtaskId);
+            if (subtask != null) {
+                LocalDateTime subtaskEnd = subtask.getEndTime();
+                if (subtaskEnd != null) {
+                    if (latestEnd == null || subtaskEnd.isAfter(latestEnd)) {
+                        latestEnd = subtaskEnd;
+                    }
+                }
+            }
+        }
+        return latestEnd; // Вернёт null, если подзадач нет или у них нет времени окончания
     }
 }
