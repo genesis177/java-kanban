@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
+import java.util.List;
 
 public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
     private final TaskManager taskManager;
@@ -16,9 +17,8 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         switch (exchange.getRequestMethod()) {
             case "GET":
-                // Логика обработки GET-запроса
-
-                sendText(exchange, "История задач", 200);
+                List<Task> history = taskManager.getHistory();
+                sendText(exchange, history.toString(), 200);
                 break;
             default:
                 sendText(exchange, "Метод не разрешён", 405);
